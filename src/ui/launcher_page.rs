@@ -1,6 +1,6 @@
 use iced::{Element, widget::container};
 
-use crate::{AppState, Events};
+use crate::{AppState, events::events::Events};
 
 impl AppState {
     pub fn launcher_page(&self) -> Element<'_, Events> {

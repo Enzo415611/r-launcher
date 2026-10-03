@@ -1,6 +1,6 @@
 use iced::Element;
 
-use crate::{AppState, Events};
+use crate::{AppState, events::events::Events};
 
 enum Page {
     Login,
@@ -8,13 +8,17 @@ enum Page {
 }
 
 pub struct UiState {
-    current_page: Page,
+    pub current_page: Page,
+    pub name: String,
+    pub login_mode: bool,
 }
 
 impl Default for UiState {
     fn default() -> Self {
         Self {
             current_page: Page::Login,
+            name: String::new(),
+            login_mode: false,
         }
     }
 }
