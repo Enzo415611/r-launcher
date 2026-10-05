@@ -1,27 +1,44 @@
 use iced::{
-    Element,
-    widget::{column, container, row, text, text_input},
+    Alignment, Element,
+    widget::{button, column, container, pick_list, row, text_input},
 };
 
 use crate::{
-    AppState,
+    db::user_dto::UserDto,
     events::{events::Events, ui_events::UiEvents},
+    state::state::AppState,
+    ui::view::{LoginPages, Page},
 };
 
 impl AppState {
-    pub fn login_page(&self) -> Element<'_, Events> {
-        let view = if self.ui_state.login_mode {
-            self.offline_login_page()
-        } else {
-            column![row![text("Login")]].into()
-        };
+    pub fn home_login_page(&self) -> Element<'_, Events> {
+        let offline_login = button("Offline Account").on_press(Events::UiEvents(
+            UiEvents::ChangePage(Page::Login(LoginPages::OfflineLogin)),
+        ));
+        let list = pick_list(
+            self.launcher_state.offline_users.to_owned(),
+            self.launcher_state.current_account.to_owned(),
+            |a| Events::UiEvents(UiEvents::AccountSelected(a)),
+        );
 
-        container(view).into()
+        container(column![row![offline_login, list]]).into()
     }
 
-    fn offline_login_page(&self) -> Element<'_, Events> {
-        let user_name_input = text_input("", self.ui_state.name.as_str())
+    pub fn offline_login_page(&self) -> Element<'_, Events> {
+        let user_name_input = text_input("Username", self.ui_state.name.as_str())
             .on_input(|e| Events::UiEvents(UiEvents::InputName(e)));
-        column![user_name_input].into()
+
+        let create = button("Create");
+        column![
+            row![
+                button("Login").on_press(Events::UiEvents(UiEvents::ChangePage(Page::Login(
+                    LoginPages::Home
+                ))))
+            ]
+            .align_y(Alignment::Start),
+            user_name_input,
+            create
+        ]
+        .into()
     }
 }
