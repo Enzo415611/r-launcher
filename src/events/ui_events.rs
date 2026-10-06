@@ -15,7 +15,7 @@ impl AppState {
     pub fn ui_events(&mut self, e: UiEvents) -> Task<Events> {
         match e {
             UiEvents::InputName(s) => {
-                self.ui_state.name = s;
+                self.ui_state.username = s;
                 Task::none()
             }
             UiEvents::ChangePage(p) => {

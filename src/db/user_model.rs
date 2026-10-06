@@ -2,7 +2,7 @@
 pub struct User {
     #[key]
     #[auto]
-    id: u64,
+    pub id: u64,
     #[unique]
     pub username: String,
 }

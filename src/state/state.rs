@@ -1,7 +1,10 @@
 use iced::Task;
 use toasty::Db;
 
-use crate::{events::events::Events, state::launcher_state::LauncherState, ui::view::UiState};
+use crate::{
+    events::events::Events,
+    state::{launcher_state::LauncherState, ui_state::UiState},
+};
 
 pub struct AppState {
     pub db: Option<Db>,
