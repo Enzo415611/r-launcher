@@ -6,6 +6,7 @@ pub async fn save_user(mut db: Db, username: String) -> Option<UserDto> {
     match User::create().username(username).exec(&mut db).await {
         Ok(n) => {
             return Some(UserDto {
+                id: n.id,
                 username: n.username,
             });
         }
@@ -21,14 +22,23 @@ pub async fn get_offline_users(mut db: Db) -> Vec<UserDto> {
         Ok(u) => {
             let v: Vec<UserDto> = u
                 .into_iter()
-                .map(|u| UserDto::new(u.username.to_string()))
+                .map(|u| UserDto::new(u.id, u.username.to_string()))
                 .collect();
-            println!("aqui {:?}", v);
             return v;
         }
         Err(err) => {
             eprintln!("err: {}", err);
             return Vec::new();
+        }
+    }
+}
+
+pub async fn remove_user(mut db: Db, id: u64) -> anyhow::Result<()> {
+    match User::delete_by_id(&mut db, id).await {
+        Ok(_) => Ok(()),
+        Err(err) => {
+            eprintln!("err: {}", err);
+            Err(err.into())
         }
     }
 }

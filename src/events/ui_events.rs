@@ -24,6 +24,7 @@ impl AppState {
             }
             UiEvents::AccountSelected(a) => {
                 self.launcher_state.current_account = Some(a);
+                self.save_config();
                 Task::none()
             }
         }

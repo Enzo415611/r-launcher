@@ -1,5 +1,6 @@
 use crate::state::state::AppState;
 
+mod config;
 mod db;
 mod events;
 mod launcher;

@@ -16,6 +16,7 @@ pub enum LoginEvents {
     GetOffUsersFuture(Vec<UserDto>),
     CreateAccount,
     CreateAccountFuture(Option<UserDto>),
+    RemoveAccount,
 }
 
 impl AppState {
@@ -30,24 +31,36 @@ impl AppState {
                 Task::none()
             }
             LoginEvents::GetOffUsersFuture(v) => {
-                self.launcher_state.offline_users = v;
-                Task::none()
+                self.launcher_state.offline_accounts = v;
+                Task::batch(vec![Task::done(Events::Config)])
             }
             LoginEvents::CreateAccount => {
-                if let Some(db) = self.db.to_owned() {
-                    return Task::perform(save_user(db, self.ui_state.username.to_string()), |u| {
-                        Events::Login(LoginEvents::CreateAccountFuture(u))
-                    });
+                if self.ui_state.username.len() > 3 {
+                    if let Some(db) = self.db.to_owned() {
+                        return Task::perform(
+                            save_user(db, self.ui_state.username.to_string()),
+                            |u| Events::Login(LoginEvents::CreateAccountFuture(u)),
+                        );
+                    }
                 }
                 Task::none()
             }
             LoginEvents::CreateAccountFuture(u) => {
                 if let Some(u) = u {
-                    println!("{:?}", u);
                     self.launcher_state.current_account = Some(u.clone());
-                    self.launcher_state.offline_users.push(u);
+                    self.launcher_state.offline_accounts.push(u);
                     self.ui_state.username.clear();
                     self.ui_state.current_page = Page::Login(LoginPages::Home)
+                }
+                Task::none()
+            }
+            LoginEvents::RemoveAccount => {
+                if let Some(a) = &self.launcher_state.current_account {
+                    self.launcher_state.offline_accounts.retain(|u| u != a);
+                    if let Some(u) = self.launcher_state.offline_accounts.first() {
+                        self.launcher_state.current_account = Some(u.clone());
+                        self.save_config();
+                    }
                 }
                 Task::none()
             }

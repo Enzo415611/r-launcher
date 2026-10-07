@@ -2,7 +2,7 @@ use iced::Task;
 use toasty::Db;
 
 use crate::{
-    events::events::Events,
+    events::{events::Events, login_events::LoginEvents},
     state::{launcher_state::LauncherState, ui_state::UiState},
 };
 
@@ -22,7 +22,7 @@ impl AppState {
                 ui_state: UiState::default(),
                 launcher_state: LauncherState::new(),
             },
-            Task::done(Events::InitDb),
+            Task::batch(vec![Task::done(Events::InitDb)]),
         )
     }
 }

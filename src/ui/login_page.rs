@@ -1,6 +1,6 @@
 use iced::{
     Alignment, Element,
-    widget::{button, column, container, pick_list, row, text_input},
+    widget::{button, column, container, pick_list, row, text, text_input},
 };
 
 use crate::{
@@ -11,16 +11,26 @@ use crate::{
 
 impl AppState {
     pub fn home_login_page(&self) -> Element<'_, Events> {
-        let offline_login = button("Offline Account").on_press(Events::Ui(UiEvents::ChangePage(
-            Page::Login(LoginPages::OfflineLogin),
-        )));
-        let list = pick_list(
-            self.launcher_state.offline_users.to_owned(),
-            self.launcher_state.current_account.to_owned(),
-            |a| Events::Ui(UiEvents::AccountSelected(a)),
-        );
+        let offline_login = button("Create Offline Account").on_press(Events::Ui(
+            UiEvents::ChangePage(Page::Login(LoginPages::OfflineLogin)),
+        ));
 
-        container(column![row![offline_login, list]]).into()
+        let list = row![
+            pick_list(
+                self.launcher_state.offline_accounts.to_owned(),
+                self.launcher_state.current_account.to_owned(),
+                |a| Events::Ui(UiEvents::AccountSelected(a)),
+            ),
+            button("Remove").on_press(Events::Login(LoginEvents::RemoveAccount))
+        ];
+
+        let l = if self.launcher_state.current_account.is_some() {
+            row![button("Launcher").on_press(Events::Ui(UiEvents::ChangePage(Page::Launcher)))]
+        } else {
+            row![text("Select Or Create Account")]
+        };
+
+        container(column![row![offline_login, list, l]]).into()
     }
 
     pub fn offline_login_page(&self) -> Element<'_, Events> {
@@ -30,7 +40,7 @@ impl AppState {
         let create = button("Create").on_press(Events::Login(LoginEvents::CreateAccount));
         column![
             row![
-                button("Login").on_press(Events::Ui(UiEvents::ChangePage(Page::Login(
+                button("X").on_press(Events::Ui(UiEvents::ChangePage(Page::Login(
                     LoginPages::Home
                 ))))
             ]

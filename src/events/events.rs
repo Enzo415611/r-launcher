@@ -11,6 +11,7 @@ use crate::{
 pub enum Events {
     InitDb,
     DbFuture(Option<Db>),
+    Config,
     Ui(UiEvents),
     Login(LoginEvents),
 }
@@ -25,6 +26,11 @@ impl AppState {
             }
             Events::Ui(e) => self.ui_events(e),
             Events::Login(e) => self.login_events(e),
+            Events::Config => {
+                // load and save config
+                self.load_config();
+                Task::none()
+            }
         }
     }
 }
