@@ -3,7 +3,7 @@ use iced::Task;
 use crate::{
     db::{
         user_dto::UserDto,
-        user_service::{get_offline_users, save_user},
+        user_service::{get_offline_users, remove_user, save_user},
     },
     events::events::Events,
     state::state::AppState,
@@ -17,6 +17,7 @@ pub enum LoginEvents {
     CreateAccount,
     CreateAccountFuture(Option<UserDto>),
     RemoveAccount,
+    RemoveAccountFuture(Result<(), toasty::Error>),
 }
 
 impl AppState {
@@ -35,8 +36,11 @@ impl AppState {
                 Task::batch(vec![Task::done(Events::Config)])
             }
             LoginEvents::CreateAccount => {
-                if self.ui_state.username.len() > 3 {
+                println!("0");
+                if self.ui_state.username.len() >= 3 {
+                    println!("1");
                     if let Some(db) = self.db.to_owned() {
+                        println!("2");
                         return Task::perform(
                             save_user(db, self.ui_state.username.to_string()),
                             |u| Events::Login(LoginEvents::CreateAccountFuture(u)),
@@ -55,12 +59,29 @@ impl AppState {
                 Task::none()
             }
             LoginEvents::RemoveAccount => {
-                if let Some(a) = &self.launcher_state.current_account {
-                    self.launcher_state.offline_accounts.retain(|u| u != a);
+                if let Some(current_account) = &self.launcher_state.current_account {
+                    self.launcher_state
+                        .offline_accounts
+                        .retain(|u| u != current_account);
+                    let id = current_account.id;
                     if let Some(u) = self.launcher_state.offline_accounts.first() {
                         self.launcher_state.current_account = Some(u.clone());
                         self.save_config();
+                    } else {
+                        self.launcher_state.current_account = None;
                     }
+
+                    if let Some(db) = self.db.to_owned() {
+                        return Task::perform(remove_user(db, id), |r| {
+                            Events::Login(LoginEvents::RemoveAccountFuture(r))
+                        });
+                    }
+                }
+                Task::none()
+            }
+            LoginEvents::RemoveAccountFuture(r) => {
+                if let Err(err) = r {
+                    eprintln!("{}", err);
                 }
                 Task::none()
             }

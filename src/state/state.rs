@@ -2,7 +2,7 @@ use iced::Task;
 use toasty::Db;
 
 use crate::{
-    events::{events::Events, login_events::LoginEvents},
+    events::events::Events,
     state::{launcher_state::LauncherState, ui_state::UiState},
 };
 

@@ -33,7 +33,7 @@ pub async fn get_offline_users(mut db: Db) -> Vec<UserDto> {
     }
 }
 
-pub async fn remove_user(mut db: Db, id: u64) -> anyhow::Result<()> {
+pub async fn remove_user(mut db: Db, id: u64) -> Result<(), toasty::Error> {
     match User::delete_by_id(&mut db, id).await {
         Ok(_) => Ok(()),
         Err(err) => {
