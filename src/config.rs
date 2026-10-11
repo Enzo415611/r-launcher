@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{db::user_dto::UserDto, state::state::AppState};
+use crate::{db::dto::user_dto::UserDto, state::state::AppState};
 
 #[derive(Serialize, Deserialize)]
 pub struct AppConfig {

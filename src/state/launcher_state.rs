@@ -1,8 +1,9 @@
-use crate::db::user_dto::UserDto;
+use crate::{db::dto::user_dto::UserDto, launcher::versions_api::Versions};
 
 pub struct LauncherState {
     pub current_account: Option<UserDto>,
     pub offline_accounts: Vec<UserDto>,
+    pub versions: Option<Versions>,
 }
 
 impl LauncherState {
@@ -10,6 +11,7 @@ impl LauncherState {
         Self {
             current_account: None,
             offline_accounts: Vec::new(),
+            versions: None,
         }
     }
 }

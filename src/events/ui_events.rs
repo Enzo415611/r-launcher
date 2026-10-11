@@ -1,7 +1,7 @@
 use iced::Task;
 
 use crate::{
-    db::user_dto::UserDto, events::events::Events, state::state::AppState, ui::view::Page,
+    db::dto::user_dto::UserDto, events::events::Events, state::state::AppState, ui::view::Page,
 };
 
 #[derive(Clone)]

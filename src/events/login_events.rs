@@ -2,8 +2,8 @@ use iced::Task;
 
 use crate::{
     db::{
-        user_dto::UserDto,
-        user_service::{get_offline_users, remove_user, save_user},
+        dto::user_dto::UserDto,
+        service::user_service::{get_offline_users, remove_user, save_user},
     },
     events::events::Events,
     state::state::AppState,
@@ -36,11 +36,8 @@ impl AppState {
                 Task::batch(vec![Task::done(Events::Config)])
             }
             LoginEvents::CreateAccount => {
-                println!("0");
                 if self.ui_state.username.len() >= 3 {
-                    println!("1");
                     if let Some(db) = self.db.to_owned() {
-                        println!("2");
                         return Task::perform(
                             save_user(db, self.ui_state.username.to_string()),
                             |u| Events::Login(LoginEvents::CreateAccountFuture(u)),

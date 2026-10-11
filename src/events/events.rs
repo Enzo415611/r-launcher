@@ -3,7 +3,7 @@ use toasty::Db;
 
 use crate::{
     db::db::init_db,
-    events::{login_events::LoginEvents, ui_events::UiEvents},
+    events::{launcher_events::LauncherEvents, login_events::LoginEvents, ui_events::UiEvents},
     state::state::AppState,
 };
 
@@ -14,6 +14,7 @@ pub enum Events {
     Config,
     Ui(UiEvents),
     Login(LoginEvents),
+    Launcher(LauncherEvents),
 }
 
 impl AppState {
@@ -22,10 +23,14 @@ impl AppState {
             Events::InitDb => Task::perform(init_db(), Events::DbFuture),
             Events::DbFuture(db) => {
                 self.db = db;
-                Task::batch(vec![Task::done(Events::Login(LoginEvents::GetOffUsers))])
+                Task::batch(vec![
+                    Task::done(Events::Login(LoginEvents::GetOffUsers)),
+                    Task::done(Events::Launcher(LauncherEvents::GetVersions)),
+                ])
             }
             Events::Ui(e) => self.ui_events(e),
             Events::Login(e) => self.login_events(e),
+            Events::Launcher(e) => self.launcher_events(e),
             Events::Config => {
                 // load and save config
                 self.load_config();

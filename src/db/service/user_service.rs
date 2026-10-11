@@ -1,6 +1,6 @@
 use toasty::Db;
 
-use crate::db::{user_dto::UserDto, user_model::User};
+use crate::db::{dto::user_dto::UserDto, model::user_model::User};
 
 pub async fn save_user(mut db: Db, username: String) -> Option<UserDto> {
     match User::create().username(username).exec(&mut db).await {
