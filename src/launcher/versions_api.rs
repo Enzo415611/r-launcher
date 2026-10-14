@@ -1,22 +1,20 @@
 use serde::{Deserialize, Serialize};
 
-use crate::state::state::AppState;
-
 const URL: &str = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub struct Versions {
     pub latest: Latest,
     pub versions: Vec<Version>,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub struct Latest {
     pub release: String,
     pub snapshot: String,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub struct Version {
     pub id: String,
     #[serde(rename = "type")]

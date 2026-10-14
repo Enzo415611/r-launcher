@@ -1,6 +1,6 @@
 use iced::{
-    Alignment, Element,
-    widget::{button, column, container, pick_list, row, text, text_input},
+    Alignment, Element, Length,
+    widget::{button, column, container, pick_list, row, text_input},
 };
 
 use crate::{
@@ -11,43 +11,55 @@ use crate::{
 
 impl AppState {
     pub fn home_login_page(&self) -> Element<'_, Events> {
-        let offline_login = button("Create Offline Account").on_press(Events::Ui(
-            UiEvents::ChangePage(Page::Login(LoginPages::OfflineLogin)),
-        ));
+        let offline_login = button("Offline Account").on_press(Events::Ui(UiEvents::ChangePage(
+            Page::Login(LoginPages::OfflineLogin),
+        )));
 
-        let list = row![
-            pick_list(
-                self.launcher_state.offline_accounts.to_owned(),
-                self.launcher_state.current_account.to_owned(),
-                |a| Events::Ui(UiEvents::AccountSelected(a)),
-            ),
-            button("Remove").on_press(Events::Login(LoginEvents::RemoveAccount))
-        ];
-
-        let l = if self.launcher_state.current_account.is_some() {
-            row![button("Launcher").on_press(Events::Ui(UiEvents::ChangePage(Page::Launcher)))]
+        let accounts_list = if self.launcher_state.offline_accounts.is_empty() {
+            None
         } else {
-            row![text("Select Or Create Account")]
+            Some(
+                row![
+                    pick_list(
+                        self.launcher_state.offline_accounts.as_ref(),
+                        self.launcher_state.current_account.as_ref(),
+                        |a| Events::Ui(UiEvents::AccountSelected(a)),
+                    ),
+                    button("Remove").on_press(Events::Login(LoginEvents::RemoveAccount))
+                ]
+                .align_y(Alignment::Center),
+            )
         };
 
-        container(column![row![offline_login, list, l]]).into()
+        let launcher_button =
+            button("Launcher").on_press(Events::Ui(UiEvents::ChangePage(Page::Launcher)));
+
+        let content = column![offline_login, accounts_list, launcher_button]
+            .align_x(Alignment::Center)
+            .spacing(10);
+
+        container(content)
+            .width(Length::Fill)
+            .height(Length::Fill)
+            .center(Length::Fill)
+            .into()
     }
 
     pub fn offline_login_page(&self) -> Element<'_, Events> {
         let user_name_input = text_input("Username", &self.ui_state.username)
+            .width(300)
             .on_input(|e| Events::Ui(UiEvents::InputName(e)));
 
-        let create = button("Create").on_press(Events::Login(LoginEvents::CreateAccount));
-        column![
-            row![
-                button("X").on_press(Events::Ui(UiEvents::ChangePage(Page::Login(
-                    LoginPages::Home
-                ))))
-            ]
-            .align_y(Alignment::Start),
+        let create_button = button("Create").on_press(Events::Login(LoginEvents::CreateAccount));
+        let content = row![
+            button("X").on_press(Events::Ui(UiEvents::ChangePage(Page::Login(
+                LoginPages::Home
+            )))),
             user_name_input,
-            create
+            create_button
         ]
-        .into()
+        .spacing(10);
+
+        container(content).center(Length::Fill).into()
     }
 }

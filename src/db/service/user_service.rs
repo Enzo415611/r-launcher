@@ -22,7 +22,7 @@ pub async fn get_offline_users(mut db: Db) -> Vec<UserDto> {
         Ok(u) => {
             let v: Vec<UserDto> = u
                 .into_iter()
-                .map(|u| UserDto::new(u.id, u.username.to_string()))
+                .map(|u| UserDto::new(u.id, u.username))
                 .collect();
             return v;
         }

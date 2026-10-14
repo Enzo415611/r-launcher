@@ -19,10 +19,19 @@ impl AppState {
                 )),
             )
         } else {
-            None
+            Some(
+                button(text("Login")).on_press(Events::Ui(UiEvents::ChangePage(Page::Login(
+                    LoginPages::Home,
+                )))),
+            )
         };
-        container(column![row![horizontal().width(Fill), account_button]])
-            .padding(5)
-            .into()
+
+        let content = column![row![
+            horizontal().width(Fill),
+            account_button,
+            self.versions_button()
+        ]];
+
+        container(content).padding(5).into()
     }
 }

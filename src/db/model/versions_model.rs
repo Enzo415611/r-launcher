@@ -1,8 +1,7 @@
 #[derive(Debug, toasty::Model)]
 pub struct Versions {
     #[key]
-    #[auto]
-    pub id: u64,
+    pub id: String,
     pub latest: Latest,
     pub versions: Vec<Version>,
 }

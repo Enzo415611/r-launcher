@@ -6,7 +6,11 @@ use crate::db::{
 };
 
 pub async fn save_versions(mut db: Db) -> Option<VersionsDto> {
-    match VersionsModel::create().exec(&mut db).await {
+    if let Err(err) = VersionsModel::delete_by_id(&mut db, "global").await {
+        eprintln!("{}", err);
+    }
+
+    match VersionsModel::create().id("global").exec(&mut db).await {
         Ok(v) => Some(VersionsDto {
             latest: LatestDto {
                 release: v.latest.release.clone(),
@@ -14,10 +18,10 @@ pub async fn save_versions(mut db: Db) -> Option<VersionsDto> {
             },
             versions: v
                 .versions
-                .iter()
+                .into_iter()
                 .map(|v| VersionDto {
-                    id: v.id.clone(),
-                    version_type: v.version_type.clone(),
+                    id: v.id,
+                    version_type: v.version_type,
                 })
                 .collect(),
         }),
@@ -28,6 +32,25 @@ pub async fn save_versions(mut db: Db) -> Option<VersionsDto> {
     }
 }
 
-pub async fn get_versions() -> Option<VersionsDto> {
-    None
+pub async fn get_versions(mut db: Db) -> Option<VersionsDto> {
+    match VersionsModel::get_by_id(&mut db, "global").await {
+        Ok(v) => Some(VersionsDto {
+            latest: LatestDto {
+                release: v.latest.release.clone(),
+                snapshot: v.latest.snapshot.clone(),
+            },
+            versions: v
+                .versions
+                .into_iter()
+                .map(|v| VersionDto {
+                    id: v.id,
+                    version_type: v.version_type,
+                })
+                .collect(),
+        }),
+        Err(err) => {
+            eprintln!("{}", err);
+            None
+        }
+    }
 }

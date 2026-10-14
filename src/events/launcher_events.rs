@@ -10,6 +10,7 @@ use crate::{
 pub enum LauncherEvents {
     GetVersions,
     GetVersionsFuture(Option<Versions>),
+    VersionSelected(String),
 }
 
 impl AppState {
@@ -20,8 +21,18 @@ impl AppState {
             }),
             LauncherEvents::GetVersionsFuture(r) => {
                 if let Some(v) = r {
-                    self.launcher_state.versions = Some(v);
+                    self.launcher_state.version_state.version_selected =
+                        Some(v.latest.release.to_string());
+
+                    self.launcher_state.version_state.versions_vec =
+                        v.versions.iter().map(|v| v.id.to_string()).collect();
+
+                    self.launcher_state.version_state.versions = Some(v);
                 }
+                Task::none()
+            }
+            LauncherEvents::VersionSelected(v) => {
+                self.launcher_state.version_state.version_selected = Some(v);
                 Task::none()
             }
         }
