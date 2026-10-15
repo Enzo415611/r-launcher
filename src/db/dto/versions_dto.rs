@@ -1,22 +1,28 @@
-#[derive(Clone)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
+
 pub struct VersionsDto {
-    pub latest: Option<LatestDto>,
+    pub latest: LatestDto,
     pub versions: Vec<VersionDto>,
 }
 
-#[derive(Clone, Default)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq, Default)]
 pub struct LatestDto {
     pub release: String,
     pub snapshot: String,
 }
 
-#[derive(Clone)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub struct VersionDto {
     pub id: String,
+    #[serde(rename = "type")]
     pub version_type: String,
     pub url: Option<String>,
     pub time: Option<String>,
+    #[serde(rename = "releaseTime")]
     pub release_time: Option<String>,
     pub sha1: Option<String>,
-    pub compliance_level: Option<i32>,
+    #[serde(rename = "complianceLevel")]
+    pub compliance_level: i32,
 }

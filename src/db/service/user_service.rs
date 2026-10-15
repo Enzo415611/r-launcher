@@ -11,7 +11,7 @@ pub async fn save_user(mut db: Db, username: String) -> Option<UserDto> {
             });
         }
         Err(err) => {
-            eprintln!("{}", err);
+            eprintln!("save_user err: {}", err);
             return None;
         }
     }
@@ -27,7 +27,7 @@ pub async fn get_offline_users(mut db: Db) -> Vec<UserDto> {
             return v;
         }
         Err(err) => {
-            eprintln!("err: {}", err);
+            eprintln!("get_offline_users err: {}", err);
             return Vec::new();
         }
     }
@@ -37,7 +37,7 @@ pub async fn remove_user(mut db: Db, id: u64) -> Result<(), toasty::Error> {
     match User::delete_by_id(&mut db, id).await {
         Ok(_) => Ok(()),
         Err(err) => {
-            eprintln!("err: {}", err);
+            eprintln!("remove_user err: {}", err);
             Err(err.into())
         }
     }

@@ -7,13 +7,13 @@ use crate::db::{
 
 pub async fn save_versions(mut db: Db, v: VersionsDto) -> Option<VersionsDto> {
     if let Err(err) = VersionsModel::delete_by_id(&mut db, "global").await {
-        eprintln!("{}", err);
+        eprintln!("save_versions err: {}", err);
     }
-    let l = v.latest.unwrap_or_default();
+    let latest = v.latest;
     let v: Vec<Version> = v
         .versions
         .into_iter()
-        .map(|v| Version {
+        .map(|v: VersionDto| Version {
             id: v.id,
             version_type: v.version_type,
             url: v.url,
@@ -27,18 +27,18 @@ pub async fn save_versions(mut db: Db, v: VersionsDto) -> Option<VersionsDto> {
     match VersionsModel::create()
         .id("global")
         .latest(Latest {
-            release: l.release,
-            snapshot: l.snapshot,
+            release: latest.release,
+            snapshot: latest.snapshot,
         })
         .versions(v)
         .exec(&mut db)
         .await
     {
         Ok(v) => Some(VersionsDto {
-            latest: Some(LatestDto {
+            latest: LatestDto {
                 release: v.latest.release,
                 snapshot: v.latest.snapshot,
-            }),
+            },
             versions: v
                 .versions
                 .into_iter()
@@ -54,7 +54,7 @@ pub async fn save_versions(mut db: Db, v: VersionsDto) -> Option<VersionsDto> {
                 .collect(),
         }),
         Err(err) => {
-            eprintln!("{}", err);
+            eprintln!("save_versions err: {}", err);
             None
         }
     }
@@ -63,10 +63,10 @@ pub async fn save_versions(mut db: Db, v: VersionsDto) -> Option<VersionsDto> {
 pub async fn get_versions_by_id(mut db: Db) -> Option<VersionsDto> {
     match VersionsModel::get_by_id(&mut db, "global").await {
         Ok(v) => Some(VersionsDto {
-            latest: Some(LatestDto {
+            latest: LatestDto {
                 release: v.latest.release,
-                snapshot: v.latest.snapshot.clone(),
-            }),
+                snapshot: v.latest.snapshot,
+            },
             versions: v
                 .versions
                 .into_iter()
@@ -82,7 +82,7 @@ pub async fn get_versions_by_id(mut db: Db) -> Option<VersionsDto> {
                 .collect(),
         }),
         Err(err) => {
-            eprintln!("{}", err);
+            eprintln!("get_versions_by_id err: {}", err);
             None
         }
     }

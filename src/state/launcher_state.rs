@@ -1,4 +1,4 @@
-use crate::{db::dto::user_dto::UserDto, launcher::versions_api::Versions};
+use crate::db::dto::{user_dto::UserDto, versions_dto::VersionsDto};
 
 pub struct LauncherState {
     pub current_account: Option<UserDto>,
@@ -9,7 +9,7 @@ pub struct LauncherState {
 pub struct VersionState {
     pub version_selected: Option<String>,
     pub versions_vec: Vec<String>,
-    pub versions: Option<Versions>,
+    pub versions: Option<VersionsDto>,
 }
 
 impl Default for VersionState {

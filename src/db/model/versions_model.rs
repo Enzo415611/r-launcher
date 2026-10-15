@@ -20,5 +20,5 @@ pub struct Version {
     pub time: Option<String>,
     pub release_time: Option<String>,
     pub sha1: Option<String>,
-    pub compliance_level: Option<i32>,
+    pub compliance_level: i32,
 }
