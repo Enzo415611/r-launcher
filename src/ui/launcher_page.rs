@@ -1,7 +1,7 @@
 use iced::{
     Element,
-    Length::Fill,
-    widget::{button, column, container, row, space::horizontal, text},
+    Length::{self, Fill},
+    widget::{button, checkbox, column, container, row, space::horizontal, text},
 };
 
 use crate::{
@@ -26,11 +26,19 @@ impl AppState {
             )
         };
 
-        let content = column![row![
-            horizontal().width(Fill),
-            account_button,
-            self.versions_button()
-        ]];
+        let show_snapshot_versions =
+            checkbox(self.launcher_state.version_state.show_snapshots_versions)
+                .label("Show Snapshot Versions")
+                .on_toggle(|b| Events::Ui(UiEvents::ShowSnapshotVersions(b)));
+
+        let content = column![
+            row![horizontal().width(Fill), account_button,],
+            row![].height(Length::Fill),
+            row![
+                horizontal().width(Fill),
+                column![show_snapshot_versions, self.versions_button()],
+            ]
+        ];
 
         container(content).padding(5).into()
     }

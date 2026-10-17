@@ -55,7 +55,6 @@ impl AppState {
                                 })
                                 .collect(),
                         };
-                        println!("com net");
                         return Task::perform(save_versions(db.clone(), versions_dto), |_| {
                             Events::Launcher(LauncherEvents::SaveVersionsDb(()))
                         });

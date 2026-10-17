@@ -10,6 +10,7 @@ pub struct VersionState {
     pub version_selected: Option<String>,
     pub versions_vec: Vec<String>,
     pub versions: Option<VersionsDto>,
+    pub show_snapshots_versions: bool,
 }
 
 impl Default for VersionState {
@@ -18,6 +19,7 @@ impl Default for VersionState {
             version_selected: None,
             versions: None,
             versions_vec: Vec::new(),
+            show_snapshots_versions: false,
         }
     }
 }
