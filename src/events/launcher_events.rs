@@ -30,7 +30,14 @@ impl AppState {
                     self.launcher_state.version_state.version_selected =
                         Some(v.latest.release.to_string());
 
-                    self.launcher_state.version_state.versions_vec =
+                    self.launcher_state.version_state.release_versions_vec = v
+                        .versions
+                        .iter()
+                        .filter(|v| v.version_type == "release")
+                        .map(|v| v.id.clone())
+                        .collect::<Vec<String>>();
+
+                    self.launcher_state.version_state.all_versions_vec =
                         v.versions.iter().map(|v| v.id.to_string()).collect();
 
                     self.launcher_state.version_state.versions = Some(v.clone());
@@ -76,7 +83,14 @@ impl AppState {
             LauncherEvents::SaveVersionsDb(_) => Task::none(),
             LauncherEvents::GetVersionsById(r) => {
                 if let Some(v) = r {
-                    self.launcher_state.version_state.versions_vec =
+                    self.launcher_state.version_state.release_versions_vec = v
+                        .versions
+                        .iter()
+                        .filter(|v| v.version_type == "release")
+                        .map(|v| v.id.clone())
+                        .collect::<Vec<String>>();
+
+                    self.launcher_state.version_state.all_versions_vec =
                         v.versions.iter().map(|v| v.id.clone()).collect();
 
                     let latest = v.latest;

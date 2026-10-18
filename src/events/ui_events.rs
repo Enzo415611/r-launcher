@@ -29,7 +29,6 @@ impl AppState {
                 Task::none()
             }
             UiEvents::ShowSnapshotVersions(b) => {
-                // show or hidden versions logic
                 self.launcher_state.version_state.show_snapshots_versions = b;
                 Task::none()
             }
