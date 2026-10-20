@@ -3,11 +3,14 @@ use toasty::Db;
 
 use crate::{
     db::db::init_db,
-    events::{launcher_events::LauncherEvents, login_events::LoginEvents, ui_events::UiEvents},
+    events::{
+        instance_events::InstanceEvents, launcher_events::LauncherEvents,
+        login_events::LoginEvents, ui_events::UiEvents,
+    },
     state::state::AppState,
 };
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub enum Events {
     InitDb,
     DbFuture(Option<Db>),
@@ -15,6 +18,7 @@ pub enum Events {
     Ui(UiEvents),
     Login(LoginEvents),
     Launcher(LauncherEvents),
+    Instance(InstanceEvents),
 }
 
 impl AppState {
@@ -36,6 +40,7 @@ impl AppState {
                 self.load_config();
                 Task::none()
             }
+            Events::Instance(e) => self.instance_events(e),
         }
     }
 }

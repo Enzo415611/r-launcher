@@ -10,7 +10,7 @@ use crate::{
     state::state::AppState,
 };
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum LauncherEvents {
     GetVersions,
     GetVersionsFuture(Option<VersionsDto>),

@@ -3,14 +3,14 @@ use toasty::Db;
 
 use crate::{
     events::events::Events,
-    state::{launcher_state::LauncherState, ui_state::UiState},
+    state::{instances::InstanceState, launcher_state::LauncherState, ui_state::UiState},
 };
 
 pub struct AppState {
     pub db: Option<Db>,
-    pub current_theme: iced::Theme,
     pub ui_state: UiState,
     pub launcher_state: LauncherState,
+    pub instances_state: InstanceState,
 }
 
 impl AppState {
@@ -18,9 +18,9 @@ impl AppState {
         (
             Self {
                 db: None,
-                current_theme: iced::Theme::Dark,
                 ui_state: UiState::default(),
                 launcher_state: LauncherState::new(),
+                instances_state: InstanceState::default(),
             },
             Task::batch(vec![Task::done(Events::InitDb)]),
         )

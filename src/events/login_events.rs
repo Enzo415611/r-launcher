@@ -10,7 +10,7 @@ use crate::{
     ui::view::{LoginPages, Page},
 };
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum LoginEvents {
     GetOffUsers,
     GetOffUsersFuture(Vec<UserDto>),

@@ -2,13 +2,13 @@ use iced::Element;
 
 use crate::{events::events::Events, state::state::AppState};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum Page {
     Login(LoginPages),
     Launcher,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum LoginPages {
     OfflineLogin,
     Home,

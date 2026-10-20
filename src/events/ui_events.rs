@@ -4,7 +4,7 @@ use crate::{
     db::dto::user_dto::UserDto, events::events::Events, state::state::AppState, ui::view::Page,
 };
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum UiEvents {
     InputName(String),
     ChangePage(Page),

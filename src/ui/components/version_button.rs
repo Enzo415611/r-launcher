@@ -1,7 +1,4 @@
-use iced::{
-    Element,
-    widget::{pick_list, row},
-};
+use iced::{Element, widget::pick_list};
 
 use crate::{
     events::{events::Events, launcher_events::LauncherEvents},

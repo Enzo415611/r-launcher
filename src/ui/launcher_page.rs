@@ -1,7 +1,7 @@
 use iced::{
-    Element,
+    Alignment, Element,
     Length::{self, Fill},
-    widget::{button, checkbox, column, container, row, space::horizontal, text},
+    widget::{button, checkbox, column, container, row, rule, space::horizontal, text},
 };
 
 use crate::{
@@ -12,34 +12,45 @@ use crate::{
 
 impl AppState {
     pub fn launcher_page(&self) -> Element<'_, Events> {
-        let account_button = if let Some(u) = &self.launcher_state.current_account {
-            Some(
-                button(text(format!("{}", u.username.to_string()))).on_press(Events::Ui(
-                    UiEvents::ChangePage(Page::Login(LoginPages::Home)),
-                )),
-            )
-        } else {
-            Some(
-                button(text("Login")).on_press(Events::Ui(UiEvents::ChangePage(Page::Login(
-                    LoginPages::Home,
-                )))),
-            )
-        };
-
         let show_snapshot_versions =
             checkbox(self.launcher_state.version_state.show_snapshots_versions)
                 .label("Show Snapshot Versions")
                 .on_toggle(|b| Events::Ui(UiEvents::ShowSnapshotVersions(b)));
 
         let content = column![
-            row![horizontal().width(Fill), account_button,],
-            row![].height(Length::Fill),
+            row![horizontal().width(Fill), self.account_button(),],
+            rule::horizontal(0.8),
+            row![self.instances()]
+                .align_y(Alignment::Start)
+                .height(Length::Fill),
+            rule::horizontal(0.8),
             row![
                 horizontal().width(Fill),
                 column![show_snapshot_versions, self.versions_button()],
             ]
-        ];
+        ]
+        .spacing(3);
 
         container(content).padding(5).into()
+    }
+
+    fn account_button(&self) -> Option<Element<'_, Events>> {
+        if let Some(u) = &self.launcher_state.current_account {
+            Some(
+                button(text(format!("{}", u.username.to_string())))
+                    .on_press(Events::Ui(UiEvents::ChangePage(Page::Login(
+                        LoginPages::Home,
+                    ))))
+                    .into(),
+            )
+        } else {
+            Some(
+                button(text("Login"))
+                    .on_press(Events::Ui(UiEvents::ChangePage(Page::Login(
+                        LoginPages::Home,
+                    ))))
+                    .into(),
+            )
+        }
     }
 }
