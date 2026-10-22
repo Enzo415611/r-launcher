@@ -27,9 +27,8 @@ impl AppState {
             }),
             LauncherEvents::GetVersionsFuture(r) => {
                 if let Some(v) = r {
-                    self.launcher_state.version_state.version_selected =
-                        Some(v.latest.release.to_string());
-
+                    self.instances_state.create_instance.mc_version =
+                        Some(v.latest.release.clone());
                     self.launcher_state.version_state.release_versions_vec = v
                         .versions
                         .iter()
@@ -77,12 +76,14 @@ impl AppState {
                 Task::none()
             }
             LauncherEvents::VersionSelected(v) => {
-                self.launcher_state.version_state.version_selected = Some(v);
+                self.instances_state.create_instance.mc_version = Some(v);
                 Task::none()
             }
             LauncherEvents::SaveVersionsDb(_) => Task::none(),
             LauncherEvents::GetVersionsById(r) => {
                 if let Some(v) = r {
+                    self.instances_state.create_instance.mc_version =
+                        Some(v.latest.release.clone());
                     self.launcher_state.version_state.release_versions_vec = v
                         .versions
                         .iter()

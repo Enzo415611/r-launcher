@@ -1,6 +1,6 @@
 use iced::{
     Alignment, Element, Length,
-    widget::{button, column, container, pick_list, row, text_input},
+    widget::{button, column, container, pick_list, row, text, text_input},
 };
 
 use crate::{
@@ -11,9 +11,11 @@ use crate::{
 
 impl AppState {
     pub fn home_login_page(&self) -> Element<'_, Events> {
-        let offline_login = button("Offline Account").on_press(Events::Ui(UiEvents::ChangePage(
-            Page::Login(LoginPages::OfflineLogin),
-        )));
+        let offline_login = button(text("New Offline Account").center())
+            .on_press(Events::Ui(UiEvents::ChangePage(Page::Login(
+                LoginPages::OfflineLogin,
+            ))))
+            .width(Length::Fill);
 
         let accounts_list = if self.launcher_state.offline_accounts.is_empty() {
             None
@@ -24,18 +26,24 @@ impl AppState {
                         self.launcher_state.offline_accounts.as_ref(),
                         self.launcher_state.current_account.as_ref(),
                         |a| Events::Ui(UiEvents::AccountSelected(a)),
-                    ),
-                    button("Remove").on_press(Events::Login(LoginEvents::RemoveAccount))
+                    )
+                    .width(Length::Fill),
+                    button(text("Remove").center())
+                        .width(Length::Fill)
+                        .on_press(Events::Login(LoginEvents::RemoveAccount))
                 ]
+                .spacing(3)
                 .align_y(Alignment::Center),
             )
         };
 
-        let launcher_button =
-            button("Launcher").on_press(Events::Ui(UiEvents::ChangePage(Page::Launcher)));
+        let launcher_button = button(text("Launcher").center())
+            .on_press(Events::Ui(UiEvents::ChangePage(Page::Launcher)))
+            .width(Length::Fill);
 
         let content = column![offline_login, accounts_list, launcher_button]
             .align_x(Alignment::Center)
+            .width(200)
             .spacing(10);
 
         container(content)

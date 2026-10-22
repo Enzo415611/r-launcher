@@ -1,7 +1,7 @@
 use iced::{
     Alignment, Element,
     Length::{self, Fill},
-    widget::{button, checkbox, column, container, row, rule, space::horizontal, text},
+    widget::{button, column, container, row, rule, space::horizontal, text},
 };
 
 use crate::{
@@ -12,11 +12,6 @@ use crate::{
 
 impl AppState {
     pub fn launcher_page(&self) -> Element<'_, Events> {
-        let show_snapshot_versions =
-            checkbox(self.launcher_state.version_state.show_snapshots_versions)
-                .label("Show Snapshot Versions")
-                .on_toggle(|b| Events::Ui(UiEvents::ShowSnapshotVersions(b)));
-
         let content = column![
             row![horizontal().width(Fill), self.account_button(),],
             rule::horizontal(0.8),
@@ -24,10 +19,6 @@ impl AppState {
                 .align_y(Alignment::Start)
                 .height(Length::Fill),
             rule::horizontal(0.8),
-            row![
-                horizontal().width(Fill),
-                column![show_snapshot_versions, self.versions_button()],
-            ]
         ]
         .spacing(3);
 

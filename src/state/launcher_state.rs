@@ -7,7 +7,6 @@ pub struct LauncherState {
 }
 
 pub struct VersionState {
-    pub version_selected: Option<String>,
     pub release_versions_vec: Vec<String>,
     pub all_versions_vec: Vec<String>,
     pub versions: Option<VersionsDto>,
@@ -17,7 +16,6 @@ pub struct VersionState {
 impl Default for VersionState {
     fn default() -> Self {
         Self {
-            version_selected: None,
             versions: None,
             release_versions_vec: Vec::new(),
             all_versions_vec: Vec::new(),
