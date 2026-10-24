@@ -1,4 +1,4 @@
-use iced::Task;
+use iced::{Task, widget::pane_grid};
 
 use crate::{
     db::dto::user_dto::UserDto, events::events::Events, state::state::AppState, ui::view::Page,
@@ -10,6 +10,7 @@ pub enum UiEvents {
     ChangePage(Page),
     AccountSelected(UserDto),
     ShowSnapshotVersions(bool),
+    InstancePanesResize(pane_grid::ResizeEvent),
 }
 
 impl AppState {
@@ -30,6 +31,10 @@ impl AppState {
             }
             UiEvents::ShowSnapshotVersions(b) => {
                 self.launcher_state.version_state.show_snapshots_versions = b;
+                Task::none()
+            }
+            UiEvents::InstancePanesResize(r) => {
+                self.ui_state.instances_pane.resize(r.split, r.ratio);
                 Task::none()
             }
         }

@@ -18,10 +18,8 @@ impl AppState {
             row![self.instances()]
                 .align_y(Alignment::Start)
                 .height(Length::Fill),
-            rule::horizontal(0.8),
         ]
         .spacing(3);
-
         container(content).padding(5).into()
     }
 
