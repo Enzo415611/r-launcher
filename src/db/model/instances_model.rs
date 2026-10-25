@@ -1,13 +1,19 @@
 #[derive(Debug, toasty::Model)]
-pub struct InstancesModel {
-    #[key]
-    id: u64,
-    current_instance: InstanceModel,
-    instances: Vec<InstanceModel>,
-}
-#[derive(Debug, toasty::Embed)]
 pub struct InstanceModel {
-    name: String,
-    loader: String,
-    version: String,
+    #[key]
+    #[auto]
+    pub id: u64,
+    #[unique]
+    pub name: String,
+    pub loader: String,
+    pub version: String,
+}
+
+#[derive(Debug, toasty::Model)]
+pub struct CurrentInstanceModel {
+    #[key]
+    pub id: String,
+    pub name: String,
+    pub loader: String,
+    pub version: String,
 }

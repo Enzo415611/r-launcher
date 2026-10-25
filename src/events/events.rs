@@ -19,6 +19,7 @@ pub enum Events {
     Login(LoginEvents),
     Launcher(LauncherEvents),
     Instance(InstanceEvents),
+    ErrMsg(String),
 }
 
 impl AppState {
@@ -30,17 +31,21 @@ impl AppState {
                 Task::batch(vec![
                     Task::done(Events::Login(LoginEvents::GetOffUsers)),
                     Task::done(Events::Launcher(LauncherEvents::GetVersions)),
+                    Task::done(Events::Instance(InstanceEvents::GetAll)),
                 ])
             }
             Events::Ui(e) => self.ui_events(e),
             Events::Login(e) => self.login_events(e),
             Events::Launcher(e) => self.launcher_events(e),
             Events::Config => {
-                // load and save config
                 self.load_config();
                 Task::none()
             }
             Events::Instance(e) => self.instance_events(e),
+            Events::ErrMsg(err) => {
+                eprintln!("{}", err);
+                Task::none()
+            }
         }
     }
 }

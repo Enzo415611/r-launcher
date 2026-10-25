@@ -7,19 +7,20 @@ pub struct InstanceState {
 
 #[derive(Debug, Clone)]
 pub struct Instance {
+    pub id: u64,
     pub name: String,
     pub loader: Option<Loader>,
-    // pub loader_versions: String,
-    pub mc_version: Option<String>,
+    pub version: Option<String>,
 }
 
 impl Default for Instance {
     fn default() -> Self {
         Self {
+            id: 0,
             name: String::new(),
             loader: Some(Loader::Vanilla),
             // loader_versions: String::new(),
-            mc_version: None,
+            version: None,
         }
     }
 }
@@ -47,16 +48,14 @@ impl ToString for Loader {
     }
 }
 
-// impl From<lighty_launcher::Loader> for Loader {
-//     fn from(value: lighty_launcher::Loader) -> Self {
-//         match value {
-//             lighty_launcher::Loader::LightyUpdater => Loader::LightyUpdater,
-//             lighty_launcher::Loader::Fabric => Loader::Fabric,
-//             lighty_launcher::Loader::Forge => Loader::Forge,
-//             lighty_launcher::Loader::NeoForge => Loader::NeoForge,
-//             lighty_launcher::Loader::Optifine => Loader::Optifine,
-//             lighty_launcher::Loader::Quilt => Loader::Quilt,
-//             lighty_launcher::Loader::Vanilla => Loader::Vanilla,
-//         }
-//     }
-// }
+pub fn to_loader(loader_name: &str) -> Loader {
+    match loader_name {
+        "Fabric" => Loader::Fabric,
+        "Forge" => Loader::Forge,
+        "NeoForge" => Loader::NeoForge,
+        "Optifine" => Loader::Optifine,
+        "Quilt" => Loader::Quilt,
+        "Vanilla" => Loader::Vanilla,
+        _ => Loader::Vanilla,
+    }
+}

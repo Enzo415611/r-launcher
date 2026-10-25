@@ -2,7 +2,9 @@ use std::{fs, path::PathBuf};
 
 use toasty::{Db, models};
 
-use crate::db::model::{user_model::User, versions_model::Versions};
+use crate::db::model::{
+    instances_model::InstanceModel, user_model::User, versions_model::Versions,
+};
 
 fn get_db_path() -> Option<PathBuf> {
     if let Some(path) = dirs::data_dir() {
@@ -14,7 +16,7 @@ fn get_db_path() -> Option<PathBuf> {
 pub async fn init_db() -> Option<Db> {
     if let Some(p) = get_db_path() {
         fs::create_dir_all(&p).ok();
-        let models = models!(User, Versions);
+        let models = models!(User, Versions, InstanceModel);
         let db_path = p.join("r-launcher.db");
         let is_new_db = !db_path.exists();
         if let Ok(db) = toasty::Db::builder()

@@ -21,7 +21,7 @@ impl AppState {
                 row![
                     pick_list(
                         self.launcher_state.version_state.all_versions_vec.as_ref(),
-                        self.instances_state.create_instance.mc_version.as_ref(),
+                        self.instances_state.create_instance.version.as_ref(),
                         |s| Events::Launcher(LauncherEvents::VersionSelected(s)),
                     )
                     .width(Length::Fill),
@@ -39,7 +39,7 @@ impl AppState {
                             .version_state
                             .release_versions_vec
                             .as_ref(),
-                        self.instances_state.create_instance.mc_version.as_ref(),
+                        self.instances_state.create_instance.version.as_ref(),
                         |s| Events::Launcher(LauncherEvents::VersionSelected(s)),
                     )
                     .width(Length::Fill),

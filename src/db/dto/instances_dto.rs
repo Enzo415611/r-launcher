@@ -1,12 +1,7 @@
-#[derive(Debug, Clone)]
-pub struct InstancesDto {
-    current_instance: InstanceDto,
-    instances: Vec<InstanceDto>,
-}
-
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct InstanceDto {
-    name: String,
-    loader: String,
-    versions: String,
+    pub id: u64,
+    pub name: String,
+    pub loader: String,
+    pub version: String,
 }
