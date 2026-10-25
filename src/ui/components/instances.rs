@@ -29,7 +29,7 @@ impl AppState {
                         self.instances_state
                             .instances
                             .iter()
-                            .map(|i| button(i.name.as_str()).into()),
+                            .map(|i| self.instance_button(i.name.clone())),
                     ),
                 );
                 container(column![show_create_instance_button, scroll]).into()
