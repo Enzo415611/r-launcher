@@ -3763,6 +3763,7 @@ dependencies = [
  "confy",
  "dirs",
  "iced",
+ "indexmap",
  "lighty-launcher",
  "reqwest",
  "serde",

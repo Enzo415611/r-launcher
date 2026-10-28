@@ -5,7 +5,7 @@ use crate::{
         dto::versions_dto::{LatestDto, VersionDto, VersionsDto},
         service::versions_service::{get_versions_by_id, save_versions},
     },
-    events::events::Events,
+    events::{events::Events, mc_events::McEvents},
     launcher::versions_api::get_versions,
     state::state::AppState,
 };
@@ -14,9 +14,9 @@ use crate::{
 pub enum LauncherEvents {
     GetVersions,
     GetVersionsFuture(Option<VersionsDto>),
-    VersionSelected(String),
     SaveVersionsDb(()),
     GetVersionsById(Option<VersionsDto>),
+    McEvent(McEvents),
 }
 
 impl AppState {
@@ -27,7 +27,8 @@ impl AppState {
             }),
             LauncherEvents::GetVersionsFuture(r) => {
                 if let Some(v) = r {
-                    self.instances_state.create_instance.version = Some(v.latest.release.clone());
+                    self.instances_state.create_instance.mc_version =
+                        Some(v.latest.release.clone());
                     self.launcher_state.version_state.release_versions_vec = v
                         .versions
                         .iter()
@@ -74,14 +75,11 @@ impl AppState {
                 }
                 Task::none()
             }
-            LauncherEvents::VersionSelected(v) => {
-                self.instances_state.create_instance.version = Some(v);
-                Task::none()
-            }
             LauncherEvents::SaveVersionsDb(_) => Task::none(),
             LauncherEvents::GetVersionsById(r) => {
                 if let Some(v) = r {
-                    self.instances_state.create_instance.version = Some(v.latest.release.clone());
+                    self.instances_state.create_instance.mc_version =
+                        Some(v.latest.release.clone());
                     self.launcher_state.version_state.release_versions_vec = v
                         .versions
                         .iter()
@@ -116,6 +114,7 @@ impl AppState {
                 }
                 Task::none()
             }
+            LauncherEvents::McEvent(e) => self.mc_events(e),
         }
     }
 }

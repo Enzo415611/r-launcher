@@ -4,7 +4,7 @@ use toasty::Db;
 use crate::{
     db::db::init_db,
     events::{
-        instance_events::InstanceEvents, launcher_events::LauncherEvents,
+        instance_events::instance_events::InstanceEvents, launcher_events::LauncherEvents,
         login_events::LoginEvents, ui_events::UiEvents,
     },
     state::state::AppState,

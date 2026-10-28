@@ -5,6 +5,7 @@ pub struct InstanceModel {
     pub id: u64,
     #[unique]
     pub name: String,
+    pub loader_version: String,
     pub loader: String,
     pub version: String,
 }
@@ -14,6 +15,7 @@ pub struct CurrentInstanceModel {
     #[key]
     pub id: String,
     pub name: String,
+    pub loader_version: String,
     pub loader: String,
     pub version: String,
 }

@@ -6,13 +6,15 @@ pub async fn save_instance(mut db: Db, new_instance: InstanceDto) -> anyhow::Res
     match InstanceModel::create()
         .name(&new_instance.name)
         .loader(&new_instance.loader)
-        .version(&new_instance.loader)
+        .loader_version(new_instance.loader_version)
+        .version(&new_instance.version)
         .exec(&mut db)
         .await
     {
         Ok(instance) => Ok(InstanceDto {
             id: instance.id,
             name: instance.name,
+            loader_version: instance.loader_version,
             loader: instance.loader,
             version: instance.version,
         }),
@@ -25,6 +27,7 @@ pub async fn get_instance(mut db: Db, id: u64) -> anyhow::Result<InstanceDto> {
         Ok(i) => Ok(InstanceDto {
             id: i.id,
             name: i.name,
+            loader_version: i.loader_version,
             loader: i.loader,
             version: i.version,
         }),
@@ -44,19 +47,25 @@ pub async fn get_all(mut db: Db) -> anyhow::Result<Vec<InstanceDto>> {
                 name: ins.name,
                 version: ins.version,
                 loader: ins.loader,
+                loader_version: ins.loader_version,
             })
             .collect()),
         Err(err) => Err(err.into()),
     }
 }
-pub async fn update_instance(mut db: Db, new_instance: InstanceDto, id: u64) -> anyhow::Result<()> {
+pub async fn update_instance(
+    mut db: Db,
+    new_instance: InstanceDto,
+    id: u64,
+) -> anyhow::Result<InstanceDto> {
     let mut update = InstanceModel::update_by_id(id);
     update.set_name(&new_instance.name);
     update.set_loader(&new_instance.loader);
-    update.set_version(&new_instance.loader);
+    update.set_version(&new_instance.version);
+    update.set_loader_version(&new_instance.loader_version);
 
     match update.exec(&mut db).await {
-        Ok(_) => Ok(()),
+        Ok(_) => Ok(new_instance),
         Err(err) => {
             eprintln!("{}", err);
             Err(err.into())

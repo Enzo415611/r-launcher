@@ -1,9 +1,12 @@
+use lighty_launcher::event::EventBus;
+
 use crate::db::dto::{user_dto::UserDto, versions_dto::VersionsDto};
 
 pub struct LauncherState {
     pub current_account: Option<UserDto>,
     pub offline_accounts: Vec<UserDto>,
     pub version_state: VersionState,
+    pub event_bus: EventBus,
 }
 
 pub struct VersionState {
@@ -30,6 +33,7 @@ impl LauncherState {
             current_account: None,
             offline_accounts: Vec::new(),
             version_state: VersionState::default(),
+            event_bus: EventBus::new(1000),
         }
     }
 }
