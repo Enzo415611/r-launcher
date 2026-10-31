@@ -10,6 +10,7 @@ pub enum Page {
 
 #[derive(Clone, Debug)]
 pub enum LoginPages {
+    OnlineLogin,
     OfflineLogin,
     Home,
 }
@@ -20,6 +21,7 @@ impl AppState {
             Page::Login(p) => match p {
                 LoginPages::Home => self.home_login_page(),
                 LoginPages::OfflineLogin => self.offline_login_page(),
+                LoginPages::OnlineLogin => self.online_login_page(),
             },
             Page::Launcher => self.launcher_page(),
         }

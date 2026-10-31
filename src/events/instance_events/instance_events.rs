@@ -11,7 +11,7 @@ use crate::{
         launcher_events::LauncherEvents,
     },
     state::{
-        instances::{self, Instance, to_loader},
+        instances::{self, Instance},
         state::AppState,
     },
 };
@@ -25,7 +25,6 @@ pub enum InstanceEvents {
     EditInstanceEvents(EditInstanceEvent),
     RemoveInstance(Instance),
     RemoveInstanceFuture,
-    GetLoaderVersions,
     InstanceSelected(Instance),
     GetAll,
     GetAllFuture(Vec<InstanceDto>),
@@ -69,7 +68,6 @@ impl AppState {
                 self.instances_state.instance_selected = instance;
                 Task::none()
             }
-            InstanceEvents::GetLoaderVersions => Task::none(),
             InstanceEvents::InstanceSelected(instance) => {
                 self.instances_state.instance_selected = instance;
                 Task::done(Events::Launcher(LauncherEvents::McEvent(

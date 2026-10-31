@@ -22,22 +22,6 @@ pub async fn save_instance(mut db: Db, new_instance: InstanceDto) -> anyhow::Res
     }
 }
 
-pub async fn get_instance(mut db: Db, id: u64) -> anyhow::Result<InstanceDto> {
-    match InstanceModel::get_by_id(&mut db, id).await {
-        Ok(i) => Ok(InstanceDto {
-            id: i.id,
-            name: i.name,
-            loader_version: i.loader_version,
-            loader: i.loader,
-            version: i.version,
-        }),
-        Err(err) => {
-            eprintln!("{}", err);
-            Err(err.into())
-        }
-    }
-}
-
 pub async fn get_all(mut db: Db) -> anyhow::Result<Vec<InstanceDto>> {
     match InstanceModel::all().exec(&mut db).await {
         Ok(v) => Ok(v

@@ -18,6 +18,7 @@ pub enum LoginEvents {
     CreateAccountFuture(Option<UserDto>),
     RemoveAccount,
     RemoveAccountFuture(Result<(), toasty::Error>),
+    DeviceCodeReceived { code: String, url: String },
 }
 
 impl AppState {
@@ -82,6 +83,7 @@ impl AppState {
                 }
                 Task::none()
             }
+            LoginEvents::DeviceCodeReceived { code, url } => Task::none(),
         }
     }
 }

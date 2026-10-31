@@ -11,7 +11,13 @@ use crate::{
 
 impl AppState {
     pub fn home_login_page(&self) -> Element<'_, Events> {
-        let offline_login = button(text("New Offline Account").center())
+        // let online_login = button(text("Online").center())
+        //     .on_press(Events::Ui(UiEvents::ChangePage(Page::Login(
+        //         LoginPages::OnlineLogin,
+        //     ))))
+        //     .width(Length::Fill);
+
+        let offline_login = button(text("Offline").center())
             .on_press(Events::Ui(UiEvents::ChangePage(Page::Login(
                 LoginPages::OfflineLogin,
             ))))
@@ -69,5 +75,10 @@ impl AppState {
         .spacing(10);
 
         container(content).center(Length::Fill).into()
+    }
+
+    pub fn online_login_page(&self) -> Element<'_, Events> {
+        let content = column![button("Open Browser")];
+        container(content).into()
     }
 }

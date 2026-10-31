@@ -9,7 +9,10 @@ confy = "2.0.0"
 dirs = "7.0.0"
 iced = { version = "0.14.0", features = ["tokio"] }
 indexmap = "2.14.2"
-lighty-launcher = { version = "26.9.3", features = ["all-loaders", "events", "lighty_updater"] }
+keyring = "4.2.0"
+lighty-launcher = { version = "26.9.3", features = ["all-loaders", "events", "lighty_updater", "keyring"] }
+open = "5.4.5"
 reqwest = "0.13.5"
 serde = { version = "1.0.229", features = ["derive"] }
 toasty = { version = "0.11.0", features = ["sqlite"] }
+tokio = "1.54.1"

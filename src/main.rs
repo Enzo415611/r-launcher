@@ -1,5 +1,6 @@
 use crate::state::state::AppState;
 
+mod auth;
 mod config;
 mod db;
 mod events;
